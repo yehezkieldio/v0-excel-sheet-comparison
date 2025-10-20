@@ -69,13 +69,13 @@ export function AwbComparisonTable({ rows }: AwbComparisonTableProps) {
     const count = [row.status.inJaster, row.status.inCis, row.status.inUnifikasi].filter(Boolean).length
 
     if (count === 3) {
-      return <Badge className="bg-green-500/10 text-green-500 hover:bg-green-500/20">All Sheets</Badge>
+      return <Badge className="bg-success/10 text-success hover:bg-success/15 border-success/20 font-medium">✓ All Systems</Badge>
     }
     if (count === 2) {
-      return <Badge variant="secondary">2 Sheets</Badge>
+      return <Badge className="bg-warning/10 text-warning hover:bg-warning/15 border-warning/20 font-medium">⚠ 2 Systems</Badge>
     }
     if (count === 1) {
-      return <Badge variant="destructive">1 Sheet Only</Badge>
+      return <Badge className="bg-destructive/10 text-destructive hover:bg-destructive/15 border-destructive/20 font-medium">✕ 1 System</Badge>
     }
     return <Badge variant="outline">None</Badge>
   }
@@ -89,85 +89,100 @@ export function AwbComparisonTable({ rows }: AwbComparisonTableProps) {
   }
 
   return (
-    <div className="space-y-4">
-      <Card className="p-4">
-        <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-          <div className="flex flex-1 items-center gap-2">
-            <Search className="h-4 w-4 text-muted-foreground" />
-            <Input
-              placeholder="Search by AWB..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="max-w-sm"
-            />
-          </div>
-          <div className="flex items-center gap-2">
-            <Filter className="h-4 w-4 text-muted-foreground" />
-            <Select value={filter} onValueChange={(value) => setFilter(value as FilterType)}>
-              <SelectTrigger className="w-[200px]">
-                <SelectValue placeholder="Filter by..." />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">All Records</SelectItem>
-                <SelectItem value="all-sheets">In All Sheets</SelectItem>
-                <SelectItem value="missing-any">Missing from Any</SelectItem>
-                <SelectItem value="jaster-only">JASTER Only</SelectItem>
-                <SelectItem value="cis-only">CIS Only</SelectItem>
-                <SelectItem value="unifikasi-only">UNIFIKASI Only</SelectItem>
-              </SelectContent>
-            </Select>
+    <div className="space-y-6">
+      {/* Filters Card */}
+      <Card className="border border-border/60 bg-white shadow-sm">
+        <div className="p-5">
+          <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+            <div className="flex flex-1 items-center gap-3 max-w-md">
+              <div className="relative flex-1">
+                <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+                <Input
+                  placeholder="Search AWB number..."
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  className="pl-9 border-border/60 focus-visible:ring-primary/20"
+                />
+              </div>
+            </div>
+            <div className="flex items-center gap-3">
+              <div className="flex items-center gap-2">
+                <Filter className="h-4 w-4 text-muted-foreground" />
+                <Select value={filter} onValueChange={(value) => setFilter(value as FilterType)}>
+                  <SelectTrigger className="w-[220px] border-border/60">
+                    <SelectValue placeholder="Filter by system..." />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">All Records</SelectItem>
+                    <SelectItem value="all-sheets">✓ All Systems</SelectItem>
+                    <SelectItem value="missing-any">⚠ Missing from Any</SelectItem>
+                    <SelectItem value="jaster-only">JASTER Only</SelectItem>
+                    <SelectItem value="cis-only">CIS Only</SelectItem>
+                    <SelectItem value="unifikasi-only">UNIFIKASI Only</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="flex items-center gap-2">
+                <span className="text-xs text-muted-foreground">Per page:</span>
+                <Select value={pageSize.toString()} onValueChange={(value) => setPageSize(Number(value))}>
+                  <SelectTrigger className="w-[80px] h-9 border-border/60">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="25">25</SelectItem>
+                    <SelectItem value="50">50</SelectItem>
+                    <SelectItem value="100">100</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
           </div>
         </div>
       </Card>
 
-      <div className="flex items-center justify-between text-sm text-muted-foreground">
-        <div>
-          Showing {startIndex + 1}-{Math.min(endIndex, filteredAndSortedRows.length)} of {filteredAndSortedRows.length}{" "}
-          records
+      {/* Results Summary */}
+      <div className="flex items-center justify-between px-1">
+        <div className="text-sm text-muted-foreground">
+          Displaying <span className="font-semibold text-foreground">{startIndex + 1}-{Math.min(endIndex, filteredAndSortedRows.length)}</span> of{" "}
+          <span className="font-semibold text-foreground">{filteredAndSortedRows.length}</span> records
         </div>
-        <div className="flex items-center gap-2">
-          <span>Rows per page:</span>
-          <Select value={pageSize.toString()} onValueChange={(value) => setPageSize(Number(value))}>
-            <SelectTrigger className="w-[80px]">
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="25">25</SelectItem>
-              <SelectItem value="50">50</SelectItem>
-              <SelectItem value="100">100</SelectItem>
-              <SelectItem value="200">200</SelectItem>
-            </SelectContent>
-          </Select>
+        <div className="text-xs text-muted-foreground">
+          Page {currentPage} of {totalPages}
         </div>
       </div>
 
-      <Card>
+      {/* Data Table */}
+      <Card className="border border-border/60 bg-white shadow-sm">
         <div className="overflow-x-auto">
           <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>
+            <TableHeader className="bg-slate-50/80">
+              <TableRow className="border-border/60 hover:bg-slate-50/80">
+                <TableHead className="font-semibold text-foreground">
                   <Button
                     variant="ghost"
                     onClick={() => setSortDirection(sortDirection === "asc" ? "desc" : "asc")}
-                    className="h-8 px-2"
+                    className="h-8 px-2 hover:bg-slate-100"
                   >
                     AWB Number
-                    <ArrowUpDown className="ml-2 h-4 w-4" />
+                    <ArrowUpDown className="ml-2 h-3.5 w-3.5" />
                   </Button>
                 </TableHead>
-                <TableHead className="text-center">JASTER</TableHead>
-                <TableHead className="text-center">CIS</TableHead>
-                <TableHead className="text-center">UNIFIKASI</TableHead>
-                <TableHead>Presence Status</TableHead>
-                <TableHead>Missing From</TableHead>
+                <TableHead className="font-semibold text-foreground">System Presence</TableHead>
+                <TableHead className="font-semibold text-foreground text-center">JASTER</TableHead>
+                <TableHead className="font-semibold text-foreground text-center">CIS</TableHead>
+                <TableHead className="font-semibold text-foreground text-center">UNIFIKASI</TableHead>
+                <TableHead className="font-semibold text-foreground">Missing From</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {paginatedRows.length === 0 ? (
                 <TableRow>
-                  <TableCell colSpan={6} className="text-center text-muted-foreground py-8">
-                    No records found
+                  <TableCell colSpan={6} className="text-center text-muted-foreground py-12">
+                    <div className="flex flex-col items-center gap-2">
+                      <XCircle className="h-8 w-8 text-muted-foreground/40" />
+                      <p className="font-medium">No records found</p>
+                      <p className="text-xs">Try adjusting your filters or search term</p>
+                    </div>
                   </TableCell>
                 </TableRow>
               ) : (
@@ -175,41 +190,41 @@ export function AwbComparisonTable({ rows }: AwbComparisonTableProps) {
                   const missing = getMissingSheets(row)
 
                   return (
-                    <TableRow key={row.awb}>
-                      <TableCell className="font-mono font-medium">{row.awb}</TableCell>
+                    <TableRow key={row.awb} className="hover:bg-slate-50/50 transition-colors">
+                      <TableCell className="font-mono font-semibold text-sm">{row.awb}</TableCell>
+                      <TableCell>{getPresenceStatus(row)}</TableCell>
                       <TableCell className="text-center">
                         {row.status.inJaster ? (
-                          <CheckCircle2 className="h-5 w-5 text-green-500 inline-block" />
+                          <CheckCircle2 className="h-5 w-5 text-success inline-block" />
                         ) : (
-                          <XCircle className="h-5 w-5 text-red-500 inline-block" />
+                          <XCircle className="h-5 w-5 text-destructive/60 inline-block" />
                         )}
                       </TableCell>
                       <TableCell className="text-center">
                         {row.status.inCis ? (
-                          <CheckCircle2 className="h-5 w-5 text-green-500 inline-block" />
+                          <CheckCircle2 className="h-5 w-5 text-success inline-block" />
                         ) : (
-                          <XCircle className="h-5 w-5 text-red-500 inline-block" />
+                          <XCircle className="h-5 w-5 text-destructive/60 inline-block" />
                         )}
                       </TableCell>
                       <TableCell className="text-center">
                         {row.status.inUnifikasi ? (
-                          <CheckCircle2 className="h-5 w-5 text-green-500 inline-block" />
+                          <CheckCircle2 className="h-5 w-5 text-success inline-block" />
                         ) : (
-                          <XCircle className="h-5 w-5 text-red-500 inline-block" />
+                          <XCircle className="h-5 w-5 text-destructive/60 inline-block" />
                         )}
                       </TableCell>
-                      <TableCell>{getPresenceStatus(row)}</TableCell>
                       <TableCell>
                         {missing.length > 0 ? (
                           <div className="flex flex-wrap gap-1">
                             {missing.map((sheet) => (
-                              <Badge key={sheet} variant="outline" className="text-xs">
+                              <Badge key={sheet} variant="outline" className="text-xs font-mono">
                                 {sheet}
                               </Badge>
                             ))}
                           </div>
                         ) : (
-                          <span className="text-muted-foreground text-sm">None</span>
+                          <span className="text-muted-foreground/50 text-sm">—</span>
                         )}
                       </TableCell>
                     </TableRow>
@@ -221,31 +236,36 @@ export function AwbComparisonTable({ rows }: AwbComparisonTableProps) {
         </div>
       </Card>
 
+      {/* Pagination */}
       {totalPages > 1 && (
-        <Card className="p-4">
-          <div className="flex items-center justify-between">
-            <div className="text-sm text-muted-foreground">
-              Page {currentPage} of {totalPages}
-            </div>
-            <div className="flex items-center gap-2">
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => setCurrentPage((prev) => Math.max(1, prev - 1))}
-                disabled={currentPage === 1}
-              >
-                <ChevronLeft className="h-4 w-4" />
-                Previous
-              </Button>
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => setCurrentPage((prev) => Math.min(totalPages, prev + 1))}
-                disabled={currentPage === totalPages}
-              >
-                Next
-                <ChevronRight className="h-4 w-4" />
-              </Button>
+        <Card className="border border-border/60 bg-white shadow-sm">
+          <div className="p-4">
+            <div className="flex items-center justify-between">
+              <div className="text-sm text-muted-foreground">
+                Page <span className="font-semibold text-foreground">{currentPage}</span> of <span className="font-semibold text-foreground">{totalPages}</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setCurrentPage(Math.max(1, currentPage - 1))}
+                  disabled={currentPage === 1}
+                  className="border-border/60 hover:bg-primary/5 hover:border-primary/30 disabled:opacity-40"
+                >
+                  <ChevronLeft className="h-4 w-4 mr-1" />
+                  Previous
+                </Button>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setCurrentPage(Math.min(totalPages, currentPage + 1))}
+                  disabled={currentPage === totalPages}
+                  className="border-border/60 hover:bg-primary/5 hover:border-primary/30 disabled:opacity-40"
+                >
+                  Next
+                  <ChevronRight className="h-4 w-4 ml-1" />
+                </Button>
+              </div>
             </div>
           </div>
         </Card>

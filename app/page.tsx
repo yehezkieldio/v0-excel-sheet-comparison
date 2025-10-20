@@ -45,27 +45,35 @@ export default function Home() {
 
   return (
     <div className="min-h-screen bg-background">
-      {/* Header */}
-      <header className="border-b border-border bg-card">
-        <div className="container mx-auto px-6 py-4">
-          <div className="flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary">
-              <FileSpreadsheet className="h-5 w-5 text-primary-foreground" />
+      {/* Enterprise Header */}
+      <header className="border-b border-border/60 bg-white shadow-sm">
+        <div className="container mx-auto px-8 py-5">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-4">
+              <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-primary to-blue-600 shadow-lg shadow-primary/20">
+                <FileSpreadsheet className="h-6 w-6 text-white" />
+              </div>
+              <div>
+                <h1 className="text-2xl font-semibold tracking-tight text-foreground">AWB Data Reconciliation</h1>
+                <p className="text-sm font-medium text-muted-foreground">System Comparison & Validation</p>
+              </div>
             </div>
-            <div>
-              <h1 className="text-xl font-semibold text-foreground">Excel Comparison Tool</h1>
-              <p className="text-sm text-muted-foreground">Compare JASTER, CIS, and UNIFIKASI sheets</p>
+            <div className="flex items-center gap-3">
+              <div className="rounded-lg bg-accent px-4 py-2 border border-primary/20">
+                <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">Status</p>
+                <p className="text-sm font-semibold text-primary">Operational</p>
+              </div>
             </div>
           </div>
         </div>
       </header>
 
       {/* Main Content */}
-      <main className="container mx-auto px-6 py-8">
+      <main className="container mx-auto px-8 py-8">
         {error && (
-          <Alert variant="destructive" className="mb-6">
-            <AlertCircle className="h-4 w-4" />
-            <AlertDescription>{error}</AlertDescription>
+          <Alert variant="destructive" className="mb-8 border-l-4 border-destructive shadow-sm">
+            <AlertCircle className="h-5 w-5" />
+            <AlertDescription className="font-medium">{error}</AlertDescription>
           </Alert>
         )}
 

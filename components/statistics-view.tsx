@@ -82,21 +82,46 @@ export function StatisticsView({ stats }: StatisticsViewProps) {
   ]
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-8">
+      {/* Executive Summary Banner */}
+      <div className="bg-gradient-to-r from-primary/5 via-blue-500/5 to-primary/5 border border-primary/20 rounded-xl p-6 shadow-sm">
+        <div className="flex items-center justify-between">
+          <div>
+            <h3 className="text-lg font-semibold text-foreground mb-1">Reconciliation Summary</h3>
+            <p className="text-sm text-muted-foreground">System-wide AWB comparison overview</p>
+          </div>
+          <div className="flex items-center gap-6">
+            <div className="text-center px-4 border-r border-border/50">
+              <p className="text-3xl font-bold text-primary">{stats.totalUniqueAwbs}</p>
+              <p className="text-xs text-muted-foreground uppercase tracking-wide mt-1">Total AWBs</p>
+            </div>
+            <div className="text-center px-4">
+              <p className="text-3xl font-bold text-success">{Math.round((stats.perfectMatches / stats.totalUniqueAwbs) * 100)}%</p>
+              <p className="text-xs text-muted-foreground uppercase tracking-wide mt-1">Match Rate</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
       {/* Key Metrics */}
       <div>
-        <h3 className="text-lg font-semibold text-foreground mb-4">Key Metrics</h3>
-        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+        <h3 className="text-base font-semibold text-foreground mb-4 flex items-center gap-2">
+          <div className="h-1 w-1 rounded-full bg-primary"></div>
+          Performance Indicators
+        </h3>
+        <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-4">
           {statCards.map((stat) => (
-            <Card key={stat.label} className="p-6">
-              <div className="flex items-start justify-between">
-                <div className="space-y-2">
-                  <p className="text-sm text-muted-foreground">{stat.label}</p>
-                  <p className="text-3xl font-bold text-foreground">{stat.value}</p>
-                  {stat.description && <p className="text-xs text-muted-foreground">{stat.description}</p>}
+            <Card key={stat.label} className="border border-border/60 bg-white shadow-sm hover:shadow-md transition-shadow">
+              <div className="p-6">
+                <div className="flex items-start justify-between mb-4">
+                  <div className={`flex h-12 w-12 items-center justify-center rounded-xl ${stat.bgColor} ring-1 ring-inset ring-black/5`}>
+                    <stat.icon className={`h-6 w-6 ${stat.color}`} />
+                  </div>
                 </div>
-                <div className={`flex h-12 w-12 items-center justify-center rounded-lg ${stat.bgColor}`}>
-                  <stat.icon className={`h-6 w-6 ${stat.color}`} />
+                <div className="space-y-1">
+                  <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">{stat.label}</p>
+                  <p className="text-4xl font-bold text-foreground tracking-tight">{stat.value.toLocaleString()}</p>
+                  {stat.description && <p className="text-xs text-muted-foreground pt-1">{stat.description}</p>}
                 </div>
               </div>
             </Card>
@@ -106,17 +131,22 @@ export function StatisticsView({ stats }: StatisticsViewProps) {
 
       {/* Distribution */}
       <div>
-        <h3 className="text-lg font-semibold text-foreground mb-4">Distribution Analysis</h3>
+        <h3 className="text-base font-semibold text-foreground mb-4 flex items-center gap-2">
+          <div className="h-1 w-1 rounded-full bg-primary"></div>
+          System Distribution
+        </h3>
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
           {distributionCards.map((stat) => (
-            <Card key={stat.label} className="p-6">
-              <div className="flex items-center justify-between">
-                <div className="space-y-1">
-                  <p className="text-sm text-muted-foreground">{stat.label}</p>
-                  <p className="text-2xl font-bold text-foreground">{stat.value}</p>
-                </div>
-                <div className={`flex h-10 w-10 items-center justify-center rounded-lg ${stat.bgColor}`}>
-                  <XCircle className={`h-5 w-5 ${stat.color}`} />
+            <Card key={stat.label} className="border border-border/60 bg-white shadow-sm hover:shadow-md transition-shadow">
+              <div className="p-5">
+                <div className="flex items-center justify-between">
+                  <div className="space-y-2">
+                    <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">{stat.label}</p>
+                    <p className="text-3xl font-bold text-foreground">{stat.value.toLocaleString()}</p>
+                  </div>
+                  <div className={`flex h-10 w-10 items-center justify-center rounded-xl ${stat.bgColor} ring-1 ring-inset ring-black/5`}>
+                    <XCircle className={`h-5 w-5 ${stat.color}`} />
+                  </div>
                 </div>
               </div>
             </Card>
@@ -124,31 +154,54 @@ export function StatisticsView({ stats }: StatisticsViewProps) {
         </div>
       </div>
 
-      {/* Summary */}
-      <Card className="p-6 bg-muted/50">
-        <h3 className="text-lg font-semibold text-foreground mb-3">Summary</h3>
-        <div className="space-y-2 text-sm text-muted-foreground">
-          <p>
-            <span className="font-medium text-foreground">
-              {((stats.perfectMatches / stats.totalUniqueAwbs) * 100).toFixed(1)}%
-            </span>{" "}
-            of AWBs are perfect matches across all three sheets.
-          </p>
-          <p>
-            <span className="font-medium text-foreground">
-              {((stats.weightMismatches / stats.totalUniqueAwbs) * 100).toFixed(1)}%
-            </span>{" "}
-            have weight discrepancies that need attention.
-          </p>
-          <p>
-            <span className="font-medium text-foreground">
-              {(((stats.inJasterOnly + stats.inCisOnly + stats.inUnifikasiOnly) / stats.totalUniqueAwbs) * 100).toFixed(
-                1,
-              )}
-              %
-            </span>{" "}
-            appear in only one sheet and may require investigation.
-          </p>
+      {/* Executive Insights */}
+      <Card className="border border-border/60 bg-gradient-to-br from-slate-50 to-white shadow-sm">
+        <div className="p-6">
+          <h3 className="text-base font-semibold text-foreground mb-4 flex items-center gap-2">
+            <div className="h-1 w-1 rounded-full bg-primary"></div>
+            Key Insights
+          </h3>
+          <div className="space-y-4">
+            <div className="flex items-start gap-3 p-4 rounded-lg bg-white border border-border/50">
+              <CheckCircle2 className="h-5 w-5 text-success mt-0.5 flex-shrink-0" />
+              <div>
+                <p className="text-sm font-medium text-foreground">
+                  {((stats.perfectMatches / stats.totalUniqueAwbs) * 100).toFixed(1)}% Perfect Match Rate
+                </p>
+                <p className="text-xs text-muted-foreground mt-1">
+                  {stats.perfectMatches.toLocaleString()} AWBs validated across all systems with matching weights
+                </p>
+              </div>
+            </div>
+
+            {stats.weightMismatches > 0 && (
+              <div className="flex items-start gap-3 p-4 rounded-lg bg-white border border-warning/30">
+                <AlertTriangle className="h-5 w-5 text-warning mt-0.5 flex-shrink-0" />
+                <div>
+                  <p className="text-sm font-medium text-foreground">
+                    {((stats.weightMismatches / stats.totalUniqueAwbs) * 100).toFixed(1)}% Weight Discrepancies
+                  </p>
+                  <p className="text-xs text-muted-foreground mt-1">
+                    {stats.weightMismatches.toLocaleString()} AWBs require attention for weight validation
+                  </p>
+                </div>
+              </div>
+            )}
+
+            {(stats.inJasterOnly + stats.inCisOnly + stats.inUnifikasiOnly) > 0 && (
+              <div className="flex items-start gap-3 p-4 rounded-lg bg-white border border-destructive/30">
+                <XCircle className="h-5 w-5 text-destructive mt-0.5 flex-shrink-0" />
+                <div>
+                  <p className="text-sm font-medium text-foreground">
+                    {(((stats.inJasterOnly + stats.inCisOnly + stats.inUnifikasiOnly) / stats.totalUniqueAwbs) * 100).toFixed(1)}% Single-System Records
+                  </p>
+                  <p className="text-xs text-muted-foreground mt-1">
+                    {(stats.inJasterOnly + stats.inCisOnly + stats.inUnifikasiOnly).toLocaleString()} AWBs found in only one system - investigation recommended
+                  </p>
+                </div>
+              </div>
+            )}
+          </div>
         </div>
       </Card>
     </div>

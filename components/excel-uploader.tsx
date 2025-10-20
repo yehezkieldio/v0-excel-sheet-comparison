@@ -91,57 +91,118 @@ export const ExcelUploader = memo(function ExcelUploader({ onComparisonComplete,
 
   return (
     <div className="flex items-center justify-center min-h-[calc(100vh-200px)]">
-      <Card className="w-full max-w-2xl p-8">
-        <div
-          onDragOver={handleDragOver}
-          onDragLeave={handleDragLeave}
-          onDrop={handleDrop}
-          onClick={handleClick}
-          className={`
-            relative cursor-pointer rounded-lg border-2 border-dashed p-12 text-center transition-colors
-            ${isDragging ? "border-primary bg-primary/5" : "border-border hover:border-primary/50 hover:bg-muted/50"}
-            ${isProcessing ? "pointer-events-none opacity-50" : ""}
-          `}
-        >
-          <input ref={fileInputRef} type="file" accept=".xlsx,.xls" onChange={handleFileSelect} className="hidden" />
-
-          <div className="flex flex-col items-center gap-4">
-            {isProcessing ? (
-              <>
-                <Loader2 className="h-16 w-16 animate-spin text-primary" />
-                <div>
-                  <h3 className="text-lg font-semibold text-foreground">Processing Excel File</h3>
-                  <p className="text-sm text-muted-foreground mt-1">Analyzing {fileName}...</p>
+      <div className="w-full max-w-3xl">
+        {/* Instructions Card */}
+        <Card className="mb-6 border border-border/60 bg-gradient-to-br from-white to-slate-50 shadow-sm">
+          <div className="p-6">
+            <h3 className="text-lg font-semibold text-foreground mb-3 flex items-center gap-2">
+              <div className="h-2 w-2 rounded-full bg-primary"></div>
+              Data Comparison Workflow
+            </h3>
+            <div className="grid grid-cols-3 gap-4 text-sm">
+              <div className="flex flex-col items-center text-center p-3 rounded-lg bg-white border border-border/50">
+                <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center mb-2">
+                  <span className="text-primary font-semibold text-xs">1</span>
                 </div>
-              </>
-            ) : (
-              <>
-                <div className="flex h-20 w-20 items-center justify-center rounded-full bg-primary/10">
-                  <Upload className="h-10 w-10 text-primary" />
+                <p className="font-medium text-foreground">Upload File</p>
+                <p className="text-xs text-muted-foreground mt-1">Excel workbook with required sheets</p>
+              </div>
+              <div className="flex flex-col items-center text-center p-3 rounded-lg bg-white border border-border/50">
+                <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center mb-2">
+                  <span className="text-primary font-semibold text-xs">2</span>
                 </div>
-                <div>
-                  <h3 className="text-lg font-semibold text-foreground">Upload Excel File</h3>
-                  <p className="text-sm text-muted-foreground mt-1">
-                    Drag and drop your Excel file here, or click to browse
-                  </p>
+                <p className="font-medium text-foreground">Auto Processing</p>
+                <p className="text-xs text-muted-foreground mt-1">System validates & compares</p>
+              </div>
+              <div className="flex flex-col items-center text-center p-3 rounded-lg bg-white border border-border/50">
+                <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center mb-2">
+                  <span className="text-primary font-semibold text-xs">3</span>
                 </div>
-                <Button variant="outline" className="mt-2 bg-transparent">
-                  <FileSpreadsheet className="mr-2 h-4 w-4" />
-                  Select File
-                </Button>
-              </>
-            )}
+                <p className="font-medium text-foreground">Review Results</p>
+                <p className="text-xs text-muted-foreground mt-1">Insights & discrepancies</p>
+              </div>
+            </div>
           </div>
+        </Card>
 
-          <div className="mt-8 pt-6 border-t border-border">
-            <p className="text-xs text-muted-foreground">
-              Required sheets: <span className="font-mono text-foreground">JASTER</span>,{" "}
-              <span className="font-mono text-foreground">CIS</span>,{" "}
-              <span className="font-mono text-foreground">UNIFIKASI</span>
-            </p>
+        {/* Upload Card */}
+        <Card className="border border-border/60 bg-white shadow-lg">
+          <div
+            onDragOver={handleDragOver}
+            onDragLeave={handleDragLeave}
+            onDrop={handleDrop}
+            onClick={handleClick}
+            className={`
+              relative cursor-pointer rounded-xl border-2 border-dashed p-16 text-center transition-all
+              ${isDragging ? "border-primary bg-primary/5 scale-[0.99]" : "border-border/50 hover:border-primary/40 hover:bg-slate-50/50"}
+              ${isProcessing ? "pointer-events-none opacity-60" : ""}
+            `}
+          >
+            <input ref={fileInputRef} type="file" accept=".xlsx,.xls" onChange={handleFileSelect} className="hidden" />
+
+            <div className="flex flex-col items-center gap-6">
+              {isProcessing ? (
+                <>
+                  <div className="relative">
+                    <div className="absolute inset-0 animate-ping">
+                      <div className="h-24 w-24 rounded-full bg-primary/20"></div>
+                    </div>
+                    <Loader2 className="relative h-24 w-24 animate-spin text-primary" />
+                  </div>
+                  <div>
+                    <h3 className="text-xl font-semibold text-foreground">Analyzing Data...</h3>
+                    <p className="text-sm text-muted-foreground mt-2">Processing {fileName}</p>
+                    <div className="mt-4 flex items-center justify-center gap-2">
+                      <div className="h-1.5 w-1.5 rounded-full bg-primary animate-bounce" style={{animationDelay: '0ms'}}></div>
+                      <div className="h-1.5 w-1.5 rounded-full bg-primary animate-bounce" style={{animationDelay: '150ms'}}></div>
+                      <div className="h-1.5 w-1.5 rounded-full bg-primary animate-bounce" style={{animationDelay: '300ms'}}></div>
+                    </div>
+                  </div>
+                </>
+              ) : (
+                <>
+                  <div className="relative">
+                    <div className="absolute inset-0 animate-pulse">
+                      <div className="h-28 w-28 rounded-full bg-primary/5"></div>
+                    </div>
+                    <div className="relative flex h-28 w-28 items-center justify-center rounded-full bg-gradient-to-br from-primary/10 to-blue-600/10 border-2 border-primary/20">
+                      <Upload className="h-14 w-14 text-primary" />
+                    </div>
+                  </div>
+                  <div className="space-y-3">
+                    <h3 className="text-2xl font-semibold text-foreground">Upload Comparison File</h3>
+                    <p className="text-sm text-muted-foreground max-w-md mx-auto">
+                      Drop your Excel workbook here or click to select from your device
+                    </p>
+                  </div>
+                  <Button size="lg" variant="default" className="mt-2 bg-primary hover:bg-primary/90 shadow-lg shadow-primary/20">
+                    <FileSpreadsheet className="mr-2 h-5 w-5" />
+                    Choose File
+                  </Button>
+                </>
+              )}
+            </div>
+
+            <div className="mt-10 pt-6 border-t border-border/50">
+              <div className="flex items-center justify-center gap-6 text-xs text-muted-foreground">
+                <div className="flex items-center gap-2">
+                  <div className="h-1.5 w-1.5 rounded-full bg-muted-foreground/50"></div>
+                  <span className="font-mono font-medium">JASTER</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <div className="h-1.5 w-1.5 rounded-full bg-muted-foreground/50"></div>
+                  <span className="font-mono font-medium">CIS</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <div className="h-1.5 w-1.5 rounded-full bg-muted-foreground/50"></div>
+                  <span className="font-mono font-medium">UNIFIKASI</span>
+                </div>
+              </div>
+              <p className="text-xs text-muted-foreground mt-3">Required worksheet names (case-sensitive)</p>
+            </div>
           </div>
-        </div>
-      </Card>
+        </Card>
+      </div>
     </div>
   )
 })
