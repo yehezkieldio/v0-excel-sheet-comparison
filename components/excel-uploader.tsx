@@ -2,74 +2,92 @@
 
 import type React from "react"
 
-import { useState, useRef } from "react"
+import { useState, useRef, useCallback, memo } from "react"
 import { Upload, FileSpreadsheet, Loader2 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
 import { parseExcelFile } from "@/lib/excel-parser"
 import { compareSheets } from "@/lib/comparison-engine"
 import type { ComparisonResult } from "@/lib/types"
+import { ACCEPTED_FILE_TYPES, MAX_FILE_SIZE } from "@/lib/constants"
 
 interface ExcelUploaderProps {
   onComparisonComplete: (result: ComparisonResult) => void
   onError: (error: string) => void
 }
 
-export function ExcelUploader({ onComparisonComplete, onError }: ExcelUploaderProps) {
+export const ExcelUploader = memo(function ExcelUploader({ onComparisonComplete, onError }: ExcelUploaderProps) {
   const [isDragging, setIsDragging] = useState(false)
   const [isProcessing, setIsProcessing] = useState(false)
   const [fileName, setFileName] = useState<string | null>(null)
   const fileInputRef = useRef<HTMLInputElement>(null)
 
-  const handleDragOver = (e: React.DragEvent) => {
+  const handleDragOver = useCallback((e: React.DragEvent) => {
     e.preventDefault()
     setIsDragging(true)
-  }
+  }, [])
 
-  const handleDragLeave = () => {
+  const handleDragLeave = useCallback(() => {
     setIsDragging(false)
-  }
+  }, [])
 
-  const handleDrop = async (e: React.DragEvent) => {
-    e.preventDefault()
-    setIsDragging(false)
+  const processFile = useCallback(
+    async (file: File) => {
+      // Validate file type
+      const isValidType = ACCEPTED_FILE_TYPES.some((type) => file.name.endsWith(type))
+      if (!isValidType) {
+        onError(`Please upload a valid Excel file (${ACCEPTED_FILE_TYPES.join(", ")})`)
+        return
+      }
 
-    const file = e.dataTransfer.files[0]
-    if (file) {
-      await processFile(file)
-    }
-  }
+      // Validate file size
+      if (file.size > MAX_FILE_SIZE) {
+        onError(`File size exceeds ${MAX_FILE_SIZE / 1024 / 1024}MB limit`)
+        return
+      }
 
-  const handleFileSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0]
-    if (file) {
-      await processFile(file)
-    }
-  }
+      setIsProcessing(true)
+      setFileName(file.name)
 
-  const processFile = async (file: File) => {
-    if (!file.name.endsWith(".xlsx") && !file.name.endsWith(".xls")) {
-      onError("Please upload a valid Excel file (.xlsx or .xls)")
-      return
-    }
+      try {
+        const parsedData = await parseExcelFile(file)
+        const comparisonResult = compareSheets(parsedData)
+        onComparisonComplete(comparisonResult)
+      } catch (err) {
+        onError(err instanceof Error ? err.message : "Failed to process Excel file")
+      } finally {
+        setIsProcessing(false)
+      }
+    },
+    [onComparisonComplete, onError]
+  )
 
-    setIsProcessing(true)
-    setFileName(file.name)
+  const handleDrop = useCallback(
+    async (e: React.DragEvent) => {
+      e.preventDefault()
+      setIsDragging(false)
 
-    try {
-      const parsedData = await parseExcelFile(file)
-      const comparisonResult = compareSheets(parsedData)
-      onComparisonComplete(comparisonResult)
-    } catch (err) {
-      onError(err instanceof Error ? err.message : "Failed to process Excel file")
-    } finally {
-      setIsProcessing(false)
-    }
-  }
+      const file = e.dataTransfer.files[0]
+      if (file) {
+        await processFile(file)
+      }
+    },
+    [processFile]
+  )
 
-  const handleClick = () => {
+  const handleFileSelect = useCallback(
+    async (e: React.ChangeEvent<HTMLInputElement>) => {
+      const file = e.target.files?.[0]
+      if (file) {
+        await processFile(file)
+      }
+    },
+    [processFile]
+  )
+
+  const handleClick = useCallback(() => {
     fileInputRef.current?.click()
-  }
+  }, [])
 
   return (
     <div className="flex items-center justify-center min-h-[calc(100vh-200px)]">
@@ -126,4 +144,4 @@ export function ExcelUploader({ onComparisonComplete, onError }: ExcelUploaderPr
       </Card>
     </div>
   )
-}
+})

@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useMemo } from "react"
+import { memo, useCallback, useMemo } from "react"
 import { Search, ArrowUpDown, Filter, ChevronLeft, ChevronRight } from "lucide-react"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
@@ -9,97 +9,38 @@ import { Card } from "@/components/ui/card"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import type { ComparisonRow } from "@/lib/types"
+import { useDebounce } from "@/lib/hooks/useDebounce"
+import { useTableFilters, type FilterType } from "@/lib/hooks/useTableFilters"
+import { DEBOUNCE_DELAY, PAGE_SIZE_OPTIONS } from "@/lib/constants"
 
 interface WeightComparisonTableProps {
   rows: ComparisonRow[]
 }
 
-type FilterType = "all" | "mismatches" | "missing" | "perfect"
-type SortField = "awb" | "jaster" | "cis" | "unifikasi"
-type SortDirection = "asc" | "desc"
+export const WeightComparisonTable = memo(function WeightComparisonTable({ rows }: WeightComparisonTableProps) {
+  const {
+    searchTerm,
+    filter,
+    sortField,
+    sortDirection,
+    currentPage,
+    pageSize,
+    setSearchTerm,
+    setFilter,
+    setCurrentPage,
+    setPageSize,
+    filteredAndSortedRows,
+    paginatedRows,
+    totalPages,
+    startIndex,
+    endIndex,
+    handleSort,
+  } = useTableFilters({ rows })
 
-export function WeightComparisonTable({ rows }: WeightComparisonTableProps) {
-  const [searchTerm, setSearchTerm] = useState("")
-  const [filter, setFilter] = useState<FilterType>("all")
-  const [sortField, setSortField] = useState<SortField>("awb")
-  const [sortDirection, setSortDirection] = useState<SortDirection>("asc")
-  const [currentPage, setCurrentPage] = useState(1)
-  const [pageSize, setPageSize] = useState(50)
+  // Debounce search to avoid excessive re-renders
+  const debouncedSearchTerm = useDebounce(searchTerm, DEBOUNCE_DELAY)
 
-  const filteredAndSortedRows = useMemo(() => {
-    let filtered = rows
-
-    if (searchTerm) {
-      filtered = filtered.filter((row) => row.awb.toLowerCase().includes(searchTerm.toLowerCase()))
-    }
-
-    if (filter === "mismatches") {
-      filtered = filtered.filter((row) => !row.weightMatch && row.discrepancies.length > 0)
-    } else if (filter === "missing") {
-      filtered = filtered.filter(
-        (row) => row.jasterWeight === null || row.cisWeight === null || row.unifikasiWeight === null,
-      )
-    } else if (filter === "perfect") {
-      filtered = filtered.filter(
-        (row) => row.jasterWeight !== null && row.cisWeight !== null && row.unifikasiWeight !== null && row.weightMatch,
-      )
-    }
-
-    filtered.sort((a, b) => {
-      let aVal: string | number | null
-      let bVal: string | number | null
-
-      switch (sortField) {
-        case "awb":
-          aVal = a.awb
-          bVal = b.awb
-          break
-        case "jaster":
-          aVal = a.jasterWeight ?? -1
-          bVal = b.jasterWeight ?? -1
-          break
-        case "cis":
-          aVal = a.cisWeight ?? -1
-          bVal = b.cisWeight ?? -1
-          break
-        case "unifikasi":
-          aVal = a.unifikasiWeight ?? -1
-          bVal = b.unifikasiWeight ?? -1
-          break
-      }
-
-      if (aVal === null) return 1
-      if (bVal === null) return -1
-
-      if (typeof aVal === "string" && typeof bVal === "string") {
-        return sortDirection === "asc" ? aVal.localeCompare(bVal) : bVal.localeCompare(aVal)
-      }
-
-      return sortDirection === "asc" ? (aVal as number) - (bVal as number) : (bVal as number) - (aVal as number)
-    })
-
-    return filtered
-  }, [rows, searchTerm, filter, sortField, sortDirection])
-
-  const totalPages = Math.ceil(filteredAndSortedRows.length / pageSize)
-  const startIndex = (currentPage - 1) * pageSize
-  const endIndex = startIndex + pageSize
-  const paginatedRows = filteredAndSortedRows.slice(startIndex, endIndex)
-
-  useMemo(() => {
-    setCurrentPage(1)
-  }, [searchTerm, filter, sortField, sortDirection])
-
-  const handleSort = (field: SortField) => {
-    if (sortField === field) {
-      setSortDirection(sortDirection === "asc" ? "desc" : "asc")
-    } else {
-      setSortField(field)
-      setSortDirection("asc")
-    }
-  }
-
-  const getWeightStatus = (row: ComparisonRow) => {
+  const getWeightStatus = useCallback((row: ComparisonRow) => {
     const hasAll = row.jasterWeight !== null && row.cisWeight !== null && row.unifikasiWeight !== null
 
     if (hasAll && row.weightMatch) {
@@ -109,7 +50,7 @@ export function WeightComparisonTable({ rows }: WeightComparisonTableProps) {
       return <Badge variant="destructive">Mismatch</Badge>
     }
     return <Badge variant="secondary">Incomplete</Badge>
-  }
+  }, [])
 
   return (
     <div className="space-y-4">
@@ -153,10 +94,11 @@ export function WeightComparisonTable({ rows }: WeightComparisonTableProps) {
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="25">25</SelectItem>
-              <SelectItem value="50">50</SelectItem>
-              <SelectItem value="100">100</SelectItem>
-              <SelectItem value="200">200</SelectItem>
+              {PAGE_SIZE_OPTIONS.map((size) => (
+                <SelectItem key={size} value={size.toString()}>
+                  {size}
+                </SelectItem>
+              ))}
             </SelectContent>
           </Select>
         </div>
@@ -276,7 +218,7 @@ export function WeightComparisonTable({ rows }: WeightComparisonTableProps) {
               <Button
                 variant="outline"
                 size="sm"
-                onClick={() => setCurrentPage((prev) => Math.max(1, prev - 1))}
+                onClick={() => setCurrentPage(Math.max(1, currentPage - 1))}
                 disabled={currentPage === 1}
               >
                 <ChevronLeft className="h-4 w-4" />
@@ -285,7 +227,7 @@ export function WeightComparisonTable({ rows }: WeightComparisonTableProps) {
               <Button
                 variant="outline"
                 size="sm"
-                onClick={() => setCurrentPage((prev) => Math.min(totalPages, prev + 1))}
+                onClick={() => setCurrentPage(Math.min(totalPages, currentPage + 1))}
                 disabled={currentPage === totalPages}
               >
                 Next
@@ -297,4 +239,4 @@ export function WeightComparisonTable({ rows }: WeightComparisonTableProps) {
       )}
     </div>
   )
-}
+})

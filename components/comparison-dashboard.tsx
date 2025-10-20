@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useCallback, memo } from "react"
 import { RotateCcw, Download, BarChart3, Table2 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
@@ -15,20 +15,23 @@ interface ComparisonDashboardProps {
   onReset: () => void
 }
 
-export function ComparisonDashboard({ result, onReset }: ComparisonDashboardProps) {
+export const ComparisonDashboard = memo(function ComparisonDashboard({
+  result,
+  onReset,
+}: ComparisonDashboardProps) {
   const [activeTab, setActiveTab] = useState("statistics")
   const [detailedTab, setDetailedTab] = useState("weights")
 
-  const handleExport = () => {
-    console.log("[v0] Export button clicked")
+  const handleExport = useCallback(() => {
     try {
       exportToExcel(result)
-      console.log("[v0] Export function completed")
     } catch (error) {
-      console.error("[v0] Export failed:", error)
-      alert("Failed to export report. Please check the console for details.")
+      alert("Failed to export report. Please try again.")
+      if (process.env.NODE_ENV === "development") {
+        console.error("Export failed:", error)
+      }
     }
-  }
+  }, [result])
 
   return (
     <div className="space-y-6">
@@ -86,4 +89,4 @@ export function ComparisonDashboard({ result, onReset }: ComparisonDashboardProp
       </Tabs>
     </div>
   )
-}
+})
