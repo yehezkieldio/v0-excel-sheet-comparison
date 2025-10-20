@@ -20,7 +20,14 @@ export function ComparisonDashboard({ result, onReset }: ComparisonDashboardProp
   const [detailedTab, setDetailedTab] = useState("weights")
 
   const handleExport = () => {
-    exportToExcel(result)
+    console.log("[v0] Export button clicked")
+    try {
+      exportToExcel(result)
+      console.log("[v0] Export function completed")
+    } catch (error) {
+      console.error("[v0] Export failed:", error)
+      alert("Failed to export report. Please check the console for details.")
+    }
   }
 
   return (
