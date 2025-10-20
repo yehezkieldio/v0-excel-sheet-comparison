@@ -91,12 +91,12 @@ export function ComparisonTable({ rows }: ComparisonTableProps) {
 
   const getStatusBadge = (row: ComparisonRow) => {
     if (row.status.inJaster && row.status.inCis && row.status.inUnifikasi && row.weightMatch) {
-      return <Badge className="bg-green-500/10 text-green-500 hover:bg-green-500/20">Perfect Match</Badge>
+      return <Badge className="bg-green-500/10 text-green-500 hover:bg-green-500/20">Kecocokan Sempurna</Badge>
     }
     if (row.discrepancies.length > 0) {
-      return <Badge variant="destructive">{row.discrepancies.length} Issues</Badge>
+      return <Badge variant="destructive">{row.discrepancies.length} Masalah</Badge>
     }
-    return <Badge variant="secondary">Partial</Badge>
+    return <Badge variant="secondary">Sebagian</Badge>
   }
 
   return (
@@ -107,7 +107,7 @@ export function ComparisonTable({ rows }: ComparisonTableProps) {
           <div className="flex flex-1 items-center gap-2">
             <Search className="h-4 w-4 text-muted-foreground" />
             <Input
-              placeholder="Search by AWB..."
+              placeholder="Cari berdasarkan AWB..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               className="max-w-sm"
@@ -117,13 +117,13 @@ export function ComparisonTable({ rows }: ComparisonTableProps) {
             <Filter className="h-4 w-4 text-muted-foreground" />
             <Select value={filter} onValueChange={(value) => setFilter(value as FilterType)}>
               <SelectTrigger className="w-[180px]">
-                <SelectValue placeholder="Filter by..." />
+                <SelectValue placeholder="Filter berdasarkan..." />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="all">All Records</SelectItem>
-                <SelectItem value="perfect">Perfect Matches</SelectItem>
-                <SelectItem value="mismatches">Weight Mismatches</SelectItem>
-                <SelectItem value="missing">Missing Data</SelectItem>
+                <SelectItem value="all">Semua Data</SelectItem>
+                <SelectItem value="perfect">Kecocokan Sempurna</SelectItem>
+                <SelectItem value="mismatches">Ketidakcocokan Berat</SelectItem>
+                <SelectItem value="missing">Data Hilang</SelectItem>
               </SelectContent>
             </Select>
           </div>
@@ -132,7 +132,7 @@ export function ComparisonTable({ rows }: ComparisonTableProps) {
 
       {/* Results Count */}
       <div className="text-sm text-muted-foreground">
-        Showing {filteredAndSortedRows.length} of {rows.length} records
+        Menampilkan {filteredAndSortedRows.length} dari {rows.length} data
       </div>
 
       {/* Table */}
@@ -143,7 +143,7 @@ export function ComparisonTable({ rows }: ComparisonTableProps) {
               <TableRow>
                 <TableHead>
                   <Button variant="ghost" onClick={() => handleSort("awb")} className="h-8 px-2">
-                    AWB Number
+                    Nomor AWB
                     <ArrowUpDown className="ml-2 h-4 w-4" />
                   </Button>
                 </TableHead>
@@ -166,14 +166,14 @@ export function ComparisonTable({ rows }: ComparisonTableProps) {
                   </Button>
                 </TableHead>
                 <TableHead>Status</TableHead>
-                <TableHead>Issues</TableHead>
+                <TableHead>Masalah</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {filteredAndSortedRows.length === 0 ? (
                 <TableRow>
                   <TableCell colSpan={6} className="text-center text-muted-foreground py-8">
-                    No records found
+                    Tidak ada data ditemukan
                   </TableCell>
                 </TableRow>
               ) : (
@@ -218,7 +218,7 @@ export function ComparisonTable({ rows }: ComparisonTableProps) {
                           ))}
                         </div>
                       ) : (
-                        <span className="text-muted-foreground text-sm">None</span>
+                        <span className="text-muted-foreground text-sm">Tidak Ada</span>
                       )}
                     </TableCell>
                   </TableRow>

@@ -18,7 +18,7 @@ function DashboardLoading() {
     <div className="flex items-center justify-center min-h-[400px]">
       <div className="text-center space-y-4">
         <Loader2 className="h-12 w-12 animate-spin mx-auto text-primary" />
-        <p className="text-muted-foreground">Loading comparison results...</p>
+        <p className="text-muted-foreground">Memuat hasil perbandingan...</p>
       </div>
     </div>
   )
@@ -54,14 +54,14 @@ export default function Home() {
                 <FileSpreadsheet className="h-6 w-6 text-white" />
               </div>
               <div>
-                <h1 className="text-2xl font-semibold tracking-tight text-foreground">AWB Data Reconciliation</h1>
-                <p className="text-sm font-medium text-muted-foreground">System Comparison & Validation</p>
+                <h1 className="text-2xl font-semibold tracking-tight text-foreground">Rekonsiliasi Data AWB</h1>
+                <p className="text-sm font-medium text-muted-foreground">Perbandingan & Validasi Sistem</p>
               </div>
             </div>
             <div className="flex items-center gap-3">
               <div className="rounded-lg bg-accent px-4 py-2 border border-primary/20">
                 <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">Status</p>
-                <p className="text-sm font-semibold text-primary">Operational</p>
+                <p className="text-sm font-semibold text-primary">Beroperasi</p>
               </div>
             </div>
           </div>

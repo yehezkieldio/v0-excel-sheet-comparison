@@ -36,13 +36,13 @@ export const ExcelUploader = memo(function ExcelUploader({ onComparisonComplete,
       // Validate file type
       const isValidType = ACCEPTED_FILE_TYPES.some((type) => file.name.endsWith(type))
       if (!isValidType) {
-        onError(`Please upload a valid Excel file (${ACCEPTED_FILE_TYPES.join(", ")})`)
+        onError(`Silakan unggah file Excel yang valid (${ACCEPTED_FILE_TYPES.join(", ")})`)
         return
       }
 
       // Validate file size
       if (file.size > MAX_FILE_SIZE) {
-        onError(`File size exceeds ${MAX_FILE_SIZE / 1024 / 1024}MB limit`)
+        onError(`Ukuran file melebihi batas ${MAX_FILE_SIZE / 1024 / 1024}MB`)
         return
       }
 
@@ -54,7 +54,7 @@ export const ExcelUploader = memo(function ExcelUploader({ onComparisonComplete,
         const comparisonResult = compareSheets(parsedData)
         onComparisonComplete(comparisonResult)
       } catch (err) {
-        onError(err instanceof Error ? err.message : "Failed to process Excel file")
+        onError(err instanceof Error ? err.message : "Gagal memproses file Excel")
       } finally {
         setIsProcessing(false)
       }
@@ -97,29 +97,29 @@ export const ExcelUploader = memo(function ExcelUploader({ onComparisonComplete,
           <div className="p-6">
             <h3 className="text-lg font-semibold text-foreground mb-3 flex items-center gap-2">
               <div className="h-2 w-2 rounded-full bg-primary"></div>
-              Data Comparison Workflow
+              Alur Kerja Perbandingan Data
             </h3>
             <div className="grid grid-cols-3 gap-4 text-sm">
               <div className="flex flex-col items-center text-center p-3 rounded-lg bg-white border border-border/50">
                 <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center mb-2">
                   <span className="text-primary font-semibold text-xs">1</span>
                 </div>
-                <p className="font-medium text-foreground">Upload File</p>
-                <p className="text-xs text-muted-foreground mt-1">Excel workbook with required sheets</p>
+                <p className="font-medium text-foreground">Unggah File</p>
+                <p className="text-xs text-muted-foreground mt-1">Workbook Excel dengan sheet yang diperlukan</p>
               </div>
               <div className="flex flex-col items-center text-center p-3 rounded-lg bg-white border border-border/50">
                 <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center mb-2">
                   <span className="text-primary font-semibold text-xs">2</span>
                 </div>
-                <p className="font-medium text-foreground">Auto Processing</p>
-                <p className="text-xs text-muted-foreground mt-1">System validates & compares</p>
+                <p className="font-medium text-foreground">Proses Otomatis</p>
+                <p className="text-xs text-muted-foreground mt-1">Sistem memvalidasi & membandingkan</p>
               </div>
               <div className="flex flex-col items-center text-center p-3 rounded-lg bg-white border border-border/50">
                 <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center mb-2">
                   <span className="text-primary font-semibold text-xs">3</span>
                 </div>
-                <p className="font-medium text-foreground">Review Results</p>
-                <p className="text-xs text-muted-foreground mt-1">Insights & discrepancies</p>
+                <p className="font-medium text-foreground">Tinjau Hasil</p>
+                <p className="text-xs text-muted-foreground mt-1">Wawasan & perbedaan</p>
               </div>
             </div>
           </div>
@@ -150,8 +150,8 @@ export const ExcelUploader = memo(function ExcelUploader({ onComparisonComplete,
                     <Loader2 className="relative h-24 w-24 animate-spin text-primary" />
                   </div>
                   <div>
-                    <h3 className="text-xl font-semibold text-foreground">Analyzing Data...</h3>
-                    <p className="text-sm text-muted-foreground mt-2">Processing {fileName}</p>
+                    <h3 className="text-xl font-semibold text-foreground">Menganalisis Data...</h3>
+                    <p className="text-sm text-muted-foreground mt-2">Memproses {fileName}</p>
                     <div className="mt-4 flex items-center justify-center gap-2">
                       <div className="h-1.5 w-1.5 rounded-full bg-primary animate-bounce" style={{animationDelay: '0ms'}}></div>
                       <div className="h-1.5 w-1.5 rounded-full bg-primary animate-bounce" style={{animationDelay: '150ms'}}></div>
@@ -170,14 +170,14 @@ export const ExcelUploader = memo(function ExcelUploader({ onComparisonComplete,
                     </div>
                   </div>
                   <div className="space-y-3">
-                    <h3 className="text-2xl font-semibold text-foreground">Upload Comparison File</h3>
+                    <h3 className="text-2xl font-semibold text-foreground">Unggah File Perbandingan</h3>
                     <p className="text-sm text-muted-foreground max-w-md mx-auto">
-                      Drop your Excel workbook here or click to select from your device
+                      Letakkan workbook Excel Anda di sini atau klik untuk memilih dari perangkat Anda
                     </p>
                   </div>
                   <Button size="lg" variant="default" className="mt-2 bg-primary hover:bg-primary/90 shadow-lg shadow-primary/20">
                     <FileSpreadsheet className="mr-2 h-5 w-5" />
-                    Choose File
+                    Pilih File
                   </Button>
                 </>
               )}
@@ -198,7 +198,7 @@ export const ExcelUploader = memo(function ExcelUploader({ onComparisonComplete,
                   <span className="font-mono font-medium">UNIFIKASI</span>
                 </div>
               </div>
-              <p className="text-xs text-muted-foreground mt-3">Required worksheet names (case-sensitive)</p>
+              <p className="text-xs text-muted-foreground mt-3">Nama worksheet yang diperlukan (case-sensitive)</p>
             </div>
           </div>
         </Card>

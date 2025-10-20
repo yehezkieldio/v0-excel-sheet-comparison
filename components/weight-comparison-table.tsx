@@ -44,12 +44,12 @@ export const WeightComparisonTable = memo(function WeightComparisonTable({ rows 
     const hasAll = row.jasterWeight !== null && row.cisWeight !== null && row.unifikasiWeight !== null
 
     if (hasAll && row.weightMatch) {
-      return <Badge className="bg-success/10 text-success hover:bg-success/15 border-success/20 font-medium">✓ Match</Badge>
+      return <Badge className="bg-success/10 text-success hover:bg-success/15 border-success/20 font-medium">✓ Cocok</Badge>
     }
     if (hasAll && !row.weightMatch) {
-      return <Badge className="bg-warning/10 text-warning hover:bg-warning/15 border-warning/20 font-medium">⚠ Mismatch</Badge>
+      return <Badge className="bg-warning/10 text-warning hover:bg-warning/15 border-warning/20 font-medium">⚠ Tidak Cocok</Badge>
     }
-    return <Badge className="bg-muted text-muted-foreground hover:bg-muted/80 border-border/50 font-medium">— Incomplete</Badge>
+    return <Badge className="bg-muted text-muted-foreground hover:bg-muted/80 border-border/50 font-medium">— Tidak Lengkap</Badge>
   }, [])
 
   return (
@@ -62,7 +62,7 @@ export const WeightComparisonTable = memo(function WeightComparisonTable({ rows 
               <div className="relative flex-1">
                 <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
                 <Input
-                  placeholder="Search AWB number..."
+                  placeholder="Cari nomor AWB..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
                   className="pl-9 border-border/60 focus-visible:ring-primary/20"
@@ -74,18 +74,18 @@ export const WeightComparisonTable = memo(function WeightComparisonTable({ rows 
                 <Filter className="h-4 w-4 text-muted-foreground" />
                 <Select value={filter} onValueChange={(value) => setFilter(value as FilterType)}>
                   <SelectTrigger className="w-[200px] border-border/60">
-                    <SelectValue placeholder="Filter by status..." />
+                    <SelectValue placeholder="Filter berdasarkan status..." />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="all">All Records</SelectItem>
-                    <SelectItem value="perfect">✓ Perfect Matches</SelectItem>
-                    <SelectItem value="mismatches">⚠ Weight Mismatches</SelectItem>
-                    <SelectItem value="missing">✕ Missing Weights</SelectItem>
+                    <SelectItem value="all">Semua Data</SelectItem>
+                    <SelectItem value="perfect">✓ Kecocokan Sempurna</SelectItem>
+                    <SelectItem value="mismatches">⚠ Ketidakcocokan Berat</SelectItem>
+                    <SelectItem value="missing">✕ Berat Hilang</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
               <div className="flex items-center gap-2">
-                <span className="text-xs text-muted-foreground">Per page:</span>
+                <span className="text-xs text-muted-foreground">Per halaman:</span>
                 <Select value={pageSize.toString()} onValueChange={(value) => setPageSize(Number(value))}>
                   <SelectTrigger className="w-[80px] h-9 border-border/60">
                     <SelectValue />
@@ -107,11 +107,11 @@ export const WeightComparisonTable = memo(function WeightComparisonTable({ rows 
       {/* Results Summary */}
       <div className="flex items-center justify-between px-1">
         <div className="text-sm text-muted-foreground">
-          Displaying <span className="font-semibold text-foreground">{startIndex + 1}-{Math.min(endIndex, filteredAndSortedRows.length)}</span> of{" "}
-          <span className="font-semibold text-foreground">{filteredAndSortedRows.length}</span> records
+          Menampilkan <span className="font-semibold text-foreground">{startIndex + 1}-{Math.min(endIndex, filteredAndSortedRows.length)}</span> dari{" "}
+          <span className="font-semibold text-foreground">{filteredAndSortedRows.length}</span> data
         </div>
         <div className="text-xs text-muted-foreground">
-          Page {currentPage} of {totalPages}
+          Halaman {currentPage} dari {totalPages}
         </div>
       </div>
 
@@ -127,7 +127,7 @@ export const WeightComparisonTable = memo(function WeightComparisonTable({ rows 
                     onClick={() => handleSort("awb")}
                     className="h-8 px-2 hover:bg-slate-100"
                   >
-                    AWB Number
+                    Nomor AWB
                     <ArrowUpDown className="ml-2 h-3.5 w-3.5" />
                   </Button>
                 </TableHead>
@@ -162,7 +162,7 @@ export const WeightComparisonTable = memo(function WeightComparisonTable({ rows 
                   </Button>
                 </TableHead>
                 <TableHead className="font-semibold text-foreground">Status</TableHead>
-                <TableHead className="font-semibold text-foreground">Variance</TableHead>
+                <TableHead className="font-semibold text-foreground">Selisih</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -171,8 +171,8 @@ export const WeightComparisonTable = memo(function WeightComparisonTable({ rows 
                   <TableCell colSpan={6} className="text-center text-muted-foreground py-12">
                     <div className="flex flex-col items-center gap-2">
                       <XCircle className="h-8 w-8 text-muted-foreground/40" />
-                      <p className="font-medium">No records found</p>
-                      <p className="text-xs">Try adjusting your filters or search term</p>
+                      <p className="font-medium">Tidak ada data ditemukan</p>
+                      <p className="text-xs">Coba sesuaikan filter atau kata kunci pencarian Anda</p>
                     </div>
                   </TableCell>
                 </TableRow>
@@ -246,7 +246,7 @@ export const WeightComparisonTable = memo(function WeightComparisonTable({ rows 
           <div className="p-4">
             <div className="flex items-center justify-between">
               <div className="text-sm text-muted-foreground">
-                Page <span className="font-semibold text-foreground">{currentPage}</span> of <span className="font-semibold text-foreground">{totalPages}</span>
+                Halaman <span className="font-semibold text-foreground">{currentPage}</span> dari <span className="font-semibold text-foreground">{totalPages}</span>
               </div>
               <div className="flex items-center gap-2">
                 <Button
@@ -257,7 +257,7 @@ export const WeightComparisonTable = memo(function WeightComparisonTable({ rows 
                   className="border-border/60 hover:bg-primary/5 hover:border-primary/30 disabled:opacity-40"
                 >
                   <ChevronLeft className="h-4 w-4 mr-1" />
-                  Previous
+                  Sebelumnya
                 </Button>
                 <Button
                   variant="outline"
@@ -266,7 +266,7 @@ export const WeightComparisonTable = memo(function WeightComparisonTable({ rows 
                   disabled={currentPage === totalPages}
                   className="border-border/60 hover:bg-primary/5 hover:border-primary/30 disabled:opacity-40"
                 >
-                  Next
+                  Selanjutnya
                   <ChevronRight className="h-4 w-4 ml-1" />
                 </Button>
               </div>

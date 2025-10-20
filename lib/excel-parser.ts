@@ -55,7 +55,7 @@ function parseSheet(
       const weightCol = findColumn(row, weightColumns)
 
       if (!awbCol) {
-        throw new Error(`AWB column not found in ${sheetName}`)
+        throw new Error(`Kolom AWB tidak ditemukan di ${sheetName}`)
       }
 
       return {
@@ -79,7 +79,7 @@ export async function parseExcelFile(file: File): Promise<ParsedExcelData> {
       try {
         const data = e.target?.result
         if (!data) {
-          throw new Error("No data received from file")
+          throw new Error("Tidak ada data yang diterima dari file")
         }
 
         const workbook = XLSX.read(data, { type: "binary" })
@@ -89,7 +89,7 @@ export async function parseExcelFile(file: File): Promise<ParsedExcelData> {
         const missingSheets = requiredSheets.filter((sheet) => !workbook.SheetNames.includes(sheet))
 
         if (missingSheets.length > 0) {
-          throw new Error(`Missing required sheets: ${missingSheets.join(", ")}`)
+          throw new Error(`Sheet yang diperlukan tidak ditemukan: ${missingSheets.join(", ")}`)
         }
 
         // Parse JASTER sheet
@@ -119,17 +119,17 @@ export async function parseExcelFile(file: File): Promise<ParsedExcelData> {
 
         // Validate we got some data
         if (jaster.length === 0 && cis.length === 0 && unifikasi.length === 0) {
-          throw new Error("No valid data found in any sheet")
+          throw new Error("Tidak ada data valid yang ditemukan di sheet manapun")
         }
 
         resolve({ jaster, cis, unifikasi })
       } catch (error) {
-        reject(error instanceof Error ? error : new Error("Failed to parse Excel file"))
+        reject(error instanceof Error ? error : new Error("Gagal memproses file Excel"))
       }
     }
 
     reader.onerror = () => {
-      reject(new Error("Failed to read file"))
+      reject(new Error("Gagal membaca file"))
     }
 
     reader.readAsBinaryString(file)

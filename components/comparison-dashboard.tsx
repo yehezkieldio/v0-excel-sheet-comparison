@@ -26,7 +26,7 @@ export const ComparisonDashboard = memo(function ComparisonDashboard({
     try {
       exportToExcel(result)
     } catch (error) {
-      alert("Failed to export report. Please try again.")
+      alert("Gagal mengekspor laporan. Silakan coba lagi.")
       if (process.env.NODE_ENV === "development") {
         console.error("Export failed:", error)
       }
@@ -43,9 +43,9 @@ export const ComparisonDashboard = memo(function ComparisonDashboard({
               <BarChart3 className="h-6 w-6 text-success" />
             </div>
             <div>
-              <h2 className="text-xl font-semibold text-foreground">Analysis Complete</h2>
+              <h2 className="text-xl font-semibold text-foreground">Analisis Selesai</h2>
               <p className="text-sm text-muted-foreground mt-0.5">
-                Report generated on {result.timestamp.toLocaleDateString()} at {result.timestamp.toLocaleTimeString()}
+                Laporan dibuat pada {result.timestamp.toLocaleDateString()} pukul {result.timestamp.toLocaleTimeString()}
               </p>
             </div>
           </div>
@@ -56,7 +56,7 @@ export const ComparisonDashboard = memo(function ComparisonDashboard({
               className="border-border/60 hover:bg-primary/5 hover:border-primary/30 hover:text-primary"
             >
               <Download className="mr-2 h-4 w-4" />
-              Export Excel
+              Ekspor Excel
             </Button>
             <Button
               variant="default"
@@ -64,7 +64,7 @@ export const ComparisonDashboard = memo(function ComparisonDashboard({
               className="bg-primary hover:bg-primary/90 shadow-lg shadow-primary/20"
             >
               <RotateCcw className="mr-2 h-4 w-4" />
-              New Comparison
+              Perbandingan Baru
             </Button>
           </div>
         </div>
@@ -78,14 +78,14 @@ export const ComparisonDashboard = memo(function ComparisonDashboard({
             className="flex items-center gap-2 data-[state=active]:bg-white data-[state=active]:shadow-sm rounded-md"
           >
             <BarChart3 className="h-4 w-4" />
-            <span className="font-medium">Overview</span>
+            <span className="font-medium">Ringkasan</span>
           </TabsTrigger>
           <TabsTrigger
             value="table"
             className="flex items-center gap-2 data-[state=active]:bg-white data-[state=active]:shadow-sm rounded-md"
           >
             <Table2 className="h-4 w-4" />
-            <span className="font-medium">Details</span>
+            <span className="font-medium">Detail</span>
           </TabsTrigger>
         </TabsList>
 
@@ -100,13 +100,13 @@ export const ComparisonDashboard = memo(function ComparisonDashboard({
                 value="weights"
                 className="data-[state=active]:bg-white data-[state=active]:shadow-sm rounded-md font-medium"
               >
-                Weight Analysis
+                Analisis Berat
               </TabsTrigger>
               <TabsTrigger
                 value="awb"
                 className="data-[state=active]:bg-white data-[state=active]:shadow-sm rounded-md font-medium"
               >
-                System Presence
+                Keberadaan AWB
               </TabsTrigger>
             </TabsList>
 

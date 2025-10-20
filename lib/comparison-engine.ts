@@ -20,10 +20,10 @@ function buildDiscrepancies(
 ): string[] {
   const discrepancies: string[] = []
 
-  if (!status.inJaster) discrepancies.push("Missing in JASTER")
-  if (!status.inCis) discrepancies.push("Missing in CIS")
-  if (!status.inUnifikasi) discrepancies.push("Missing in UNIFIKASI")
-  if (!weightMatch && hasMultipleWeights) discrepancies.push("Weight mismatch")
+  if (!status.inJaster) discrepancies.push("Hilang di JASTER")
+  if (!status.inCis) discrepancies.push("Hilang di CIS")
+  if (!status.inUnifikasi) discrepancies.push("Hilang di UNIFIKASI")
+  if (!weightMatch && hasMultipleWeights) discrepancies.push("Berat tidak cocok")
 
   return discrepancies
 }

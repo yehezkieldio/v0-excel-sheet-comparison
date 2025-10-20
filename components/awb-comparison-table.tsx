@@ -69,15 +69,15 @@ export function AwbComparisonTable({ rows }: AwbComparisonTableProps) {
     const count = [row.status.inJaster, row.status.inCis, row.status.inUnifikasi].filter(Boolean).length
 
     if (count === 3) {
-      return <Badge className="bg-success/10 text-success hover:bg-success/15 border-success/20 font-medium">✓ All Systems</Badge>
+      return <Badge className="bg-success/10 text-success hover:bg-success/15 border-success/20 font-medium">✓ Semua Sistem</Badge>
     }
     if (count === 2) {
-      return <Badge className="bg-warning/10 text-warning hover:bg-warning/15 border-warning/20 font-medium">⚠ 2 Systems</Badge>
+      return <Badge className="bg-warning/10 text-warning hover:bg-warning/15 border-warning/20 font-medium">⚠ 2 Sistem</Badge>
     }
     if (count === 1) {
-      return <Badge className="bg-destructive/10 text-destructive hover:bg-destructive/15 border-destructive/20 font-medium">✕ 1 System</Badge>
+      return <Badge className="bg-destructive/10 text-destructive hover:bg-destructive/15 border-destructive/20 font-medium">✕ 1 Sistem</Badge>
     }
-    return <Badge variant="outline">None</Badge>
+    return <Badge variant="outline">Tidak Ada</Badge>
   }
 
   const getMissingSheets = (row: ComparisonRow) => {
@@ -98,7 +98,7 @@ export function AwbComparisonTable({ rows }: AwbComparisonTableProps) {
               <div className="relative flex-1">
                 <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
                 <Input
-                  placeholder="Search AWB number..."
+                  placeholder="Cari nomor AWB..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
                   className="pl-9 border-border/60 focus-visible:ring-primary/20"
@@ -110,20 +110,20 @@ export function AwbComparisonTable({ rows }: AwbComparisonTableProps) {
                 <Filter className="h-4 w-4 text-muted-foreground" />
                 <Select value={filter} onValueChange={(value) => setFilter(value as FilterType)}>
                   <SelectTrigger className="w-[220px] border-border/60">
-                    <SelectValue placeholder="Filter by system..." />
+                    <SelectValue placeholder="Filter berdasarkan sistem..." />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="all">All Records</SelectItem>
-                    <SelectItem value="all-sheets">✓ All Systems</SelectItem>
-                    <SelectItem value="missing-any">⚠ Missing from Any</SelectItem>
-                    <SelectItem value="jaster-only">JASTER Only</SelectItem>
-                    <SelectItem value="cis-only">CIS Only</SelectItem>
-                    <SelectItem value="unifikasi-only">UNIFIKASI Only</SelectItem>
+                    <SelectItem value="all">Semua Data</SelectItem>
+                    <SelectItem value="all-sheets">✓ Semua Sistem</SelectItem>
+                    <SelectItem value="missing-any">⚠ Hilang dari Sistem Manapun</SelectItem>
+                    <SelectItem value="jaster-only">Hanya JASTER</SelectItem>
+                    <SelectItem value="cis-only">Hanya CIS</SelectItem>
+                    <SelectItem value="unifikasi-only">Hanya UNIFIKASI</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
               <div className="flex items-center gap-2">
-                <span className="text-xs text-muted-foreground">Per page:</span>
+                <span className="text-xs text-muted-foreground">Per halaman:</span>
                 <Select value={pageSize.toString()} onValueChange={(value) => setPageSize(Number(value))}>
                   <SelectTrigger className="w-[80px] h-9 border-border/60">
                     <SelectValue />
@@ -143,11 +143,11 @@ export function AwbComparisonTable({ rows }: AwbComparisonTableProps) {
       {/* Results Summary */}
       <div className="flex items-center justify-between px-1">
         <div className="text-sm text-muted-foreground">
-          Displaying <span className="font-semibold text-foreground">{startIndex + 1}-{Math.min(endIndex, filteredAndSortedRows.length)}</span> of{" "}
-          <span className="font-semibold text-foreground">{filteredAndSortedRows.length}</span> records
+          Menampilkan <span className="font-semibold text-foreground">{startIndex + 1}-{Math.min(endIndex, filteredAndSortedRows.length)}</span> dari{" "}
+          <span className="font-semibold text-foreground">{filteredAndSortedRows.length}</span> data
         </div>
         <div className="text-xs text-muted-foreground">
-          Page {currentPage} of {totalPages}
+          Halaman {currentPage} dari {totalPages}
         </div>
       </div>
 
@@ -163,15 +163,15 @@ export function AwbComparisonTable({ rows }: AwbComparisonTableProps) {
                     onClick={() => setSortDirection(sortDirection === "asc" ? "desc" : "asc")}
                     className="h-8 px-2 hover:bg-slate-100"
                   >
-                    AWB Number
+                    Nomor AWB
                     <ArrowUpDown className="ml-2 h-3.5 w-3.5" />
                   </Button>
                 </TableHead>
-                <TableHead className="font-semibold text-foreground">System Presence</TableHead>
+                <TableHead className="font-semibold text-foreground">Keberadaan AWB</TableHead>
                 <TableHead className="font-semibold text-foreground text-center">JASTER</TableHead>
                 <TableHead className="font-semibold text-foreground text-center">CIS</TableHead>
                 <TableHead className="font-semibold text-foreground text-center">UNIFIKASI</TableHead>
-                <TableHead className="font-semibold text-foreground">Missing From</TableHead>
+                <TableHead className="font-semibold text-foreground">Hilang Dari</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -180,8 +180,8 @@ export function AwbComparisonTable({ rows }: AwbComparisonTableProps) {
                   <TableCell colSpan={6} className="text-center text-muted-foreground py-12">
                     <div className="flex flex-col items-center gap-2">
                       <XCircle className="h-8 w-8 text-muted-foreground/40" />
-                      <p className="font-medium">No records found</p>
-                      <p className="text-xs">Try adjusting your filters or search term</p>
+                      <p className="font-medium">Tidak ada data ditemukan</p>
+                      <p className="text-xs">Coba sesuaikan filter atau kata kunci pencarian Anda</p>
                     </div>
                   </TableCell>
                 </TableRow>
@@ -242,7 +242,7 @@ export function AwbComparisonTable({ rows }: AwbComparisonTableProps) {
           <div className="p-4">
             <div className="flex items-center justify-between">
               <div className="text-sm text-muted-foreground">
-                Page <span className="font-semibold text-foreground">{currentPage}</span> of <span className="font-semibold text-foreground">{totalPages}</span>
+                Halaman <span className="font-semibold text-foreground">{currentPage}</span> dari <span className="font-semibold text-foreground">{totalPages}</span>
               </div>
               <div className="flex items-center gap-2">
                 <Button
@@ -253,7 +253,7 @@ export function AwbComparisonTable({ rows }: AwbComparisonTableProps) {
                   className="border-border/60 hover:bg-primary/5 hover:border-primary/30 disabled:opacity-40"
                 >
                   <ChevronLeft className="h-4 w-4 mr-1" />
-                  Previous
+                  Sebelumnya
                 </Button>
                 <Button
                   variant="outline"
@@ -262,7 +262,7 @@ export function AwbComparisonTable({ rows }: AwbComparisonTableProps) {
                   disabled={currentPage === totalPages}
                   className="border-border/60 hover:bg-primary/5 hover:border-primary/30 disabled:opacity-40"
                 >
-                  Next
+                  Selanjutnya
                   <ChevronRight className="h-4 w-4 ml-1" />
                 </Button>
               </div>
