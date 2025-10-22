@@ -3,65 +3,65 @@
 ## 🎯 Quick Wins Implemented
 
 ### 1. React Performance
-```typescript
+\`\`\`typescript
 // ✅ Before: Component re-renders unnecessarily
 export function MyComponent({ data }) { ... }
 
 // ✅ After: Memoized component
 export const MyComponent = memo(function MyComponent({ data }) { ... })
-```
+\`\`\`
 
 ### 2. Expensive Computations
-```typescript
+\`\`\`typescript
 // ✅ Before: Recalculated on every render
 const filtered = rows.filter(...)
 
 // ✅ After: Memoized computation
 const filtered = useMemo(() => rows.filter(...), [rows, deps])
-```
+\`\`\`
 
 ### 3. Event Handlers
-```typescript
+\`\`\`typescript
 // ✅ Before: New function on every render
 onClick={() => handleClick(id)}
 
 // ✅ After: Memoized callback
 const handleClickMemo = useCallback(() => handleClick(id), [id])
-```
+\`\`\`
 
 ### 4. Search Input
-```typescript
+\`\`\`typescript
 // ✅ Before: Filter on every keystroke
 <Input onChange={(e) => setSearch(e.target.value)} />
 
 // ✅ After: Debounced search
 const debouncedSearch = useDebounce(search, 300)
 useEffect(() => { filterData(debouncedSearch) }, [debouncedSearch])
-```
+\`\`\`
 
 ## 📊 Data Structure Optimizations
 
 ### Map vs Array Lookup
-```typescript
+\`\`\`typescript
 // ❌ Before: O(n) lookup
 const item = array.find(x => x.id === targetId)
 
 // ✅ After: O(1) lookup
 const map = new Map(array.map(x => [x.id, x]))
 const item = map.get(targetId)
-```
+\`\`\`
 
 ### Set for Deduplication
-```typescript
+\`\`\`typescript
 // ❌ Before: O(n²) deduplication
 const unique = array.filter((v, i, a) => a.indexOf(v) === i)
 
 // ✅ After: O(n) deduplication
 const unique = [...new Set(array)]
-```
+\`\`\`
 
 ### Single-Pass Reduce
-```typescript
+\`\`\`typescript
 // ❌ Before: Multiple passes
 const sum = array.reduce((a, b) => a + b, 0)
 const count = array.length
@@ -73,22 +73,22 @@ const stats = array.reduce((acc, val) => ({
   count: acc.count + 1,
   avg: (acc.sum + val) / (acc.count + 1)
 }), { sum: 0, count: 0, avg: 0 })
-```
+\`\`\`
 
 ## 🚀 Code Splitting Strategy
 
 ### 1. Route-Based Splitting
-```typescript
+\`\`\`typescript
 // ✅ Lazy load route components
 const Dashboard = lazy(() => import('./Dashboard'))
 
 <Suspense fallback={<Loading />}>
   <Dashboard />
 </Suspense>
-```
+\`\`\`
 
 ### 2. Component-Based Splitting
-```typescript
+\`\`\`typescript
 // ✅ Lazy load heavy components
 const HeavyChart = lazy(() => import('./HeavyChart'))
 
@@ -98,21 +98,21 @@ const HeavyChart = lazy(() => import('./HeavyChart'))
     <HeavyChart data={data} />
   </Suspense>
 )}
-```
+\`\`\`
 
 ### 3. Library Splitting
-```typescript
+\`\`\`typescript
 // ✅ Dynamic imports for large libraries
 const exportToExcel = async () => {
   const XLSX = await import('xlsx')
   // Use XLSX only when needed
 }
-```
+\`\`\`
 
 ## 🎨 UI Performance Tips
 
 ### 1. Virtualization for Long Lists
-```typescript
+\`\`\`typescript
 // For lists with 1000+ items
 import { useVirtualizer } from '@tanstack/react-virtual'
 
@@ -122,19 +122,19 @@ const virtualizer = useVirtualizer({
   estimateSize: () => 50,
   overscan: 5
 })
-```
+\`\`\`
 
 ### 2. CSS Animations over JS
-```css
+\`\`\`css
 /* ✅ Hardware accelerated */
 .fade-in {
   animation: fadeIn 0.3s ease-in;
   transform: translateZ(0); /* Force GPU */
 }
-```
+\`\`\`
 
 ### 3. Image Optimization
-```typescript
+\`\`\`typescript
 // ✅ Next.js Image component
 import Image from 'next/image'
 
@@ -145,17 +145,17 @@ import Image from 'next/image'
   loading="lazy"
   placeholder="blur"
 />
-```
+\`\`\`
 
 ## 🔍 Debugging Performance
 
 ### 1. React DevTools Profiler
-```typescript
+\`\`\`typescript
 // Wrap component to profile
 <Profiler id="MyComponent" onRender={callback}>
   <MyComponent />
 </Profiler>
-```
+\`\`\`
 
 ### 2. Chrome Performance Tab
 1. Open DevTools → Performance
@@ -164,7 +164,7 @@ import Image from 'next/image'
 4. Stop and analyze flame graph
 
 ### 3. Why Did You Render
-```typescript
+\`\`\`typescript
 // Install: npm install @welldone-software/why-did-you-render
 
 if (process.env.NODE_ENV === 'development') {
@@ -173,36 +173,36 @@ if (process.env.NODE_ENV === 'development') {
     trackAllPureComponents: true,
   })
 }
-```
+\`\`\`
 
 ## 📦 Bundle Size Optimization
 
 ### 1. Analyze Bundle
-```bash
+\`\`\`bash
 # Next.js bundle analyzer
 npm install @next/bundle-analyzer
 
 # Run build and analyze
 ANALYZE=true npm run build
-```
+\`\`\`
 
 ### 2. Tree Shaking
-```typescript
+\`\`\`typescript
 // ✅ Named imports (tree-shakeable)
 import { format } from 'date-fns'
 
 // ❌ Default imports (not tree-shakeable)
 import moment from 'moment'
-```
+\`\`\`
 
 ### 3. Dynamic Imports
-```typescript
+\`\`\`typescript
 // ✅ Load only when needed
 const loadHeavyLibrary = async () => {
   const lib = await import('heavy-library')
   return lib.doSomething()
 }
-```
+\`\`\`
 
 ## 🎯 Measurement Metrics
 
@@ -217,13 +217,13 @@ const loadHeavyLibrary = async () => {
 - **Component Mount Time**: < 100ms
 
 ### Custom Metrics
-```typescript
+\`\`\`typescript
 // Measure operation time
 const startTime = performance.now()
 // ... operation ...
 const endTime = performance.now()
 console.log(`Operation took ${endTime - startTime}ms`)
-```
+\`\`\`
 
 ## 🛠️ Tools & Resources
 

@@ -29,7 +29,7 @@ Your Excel Sheet Comparison application has been significantly refactored and op
 
 ## 📁 New Files Created
 
-```
+\`\`\`
 lib/
 ├── constants.ts                 # Centralized configuration
 └── hooks/
@@ -42,7 +42,7 @@ components/
 docs/
 ├── REFACTORING_SUMMARY.md      # Detailed refactoring notes
 └── PERFORMANCE_GUIDE.md        # Performance best practices
-```
+\`\`\`
 
 ## 📊 Performance Gains (Estimated)
 
@@ -58,7 +58,7 @@ docs/
 ## 🎨 Key Features
 
 ### Before
-```typescript
+\`\`\`typescript
 // ❌ Component re-rendered unnecessarily
 export function MyTable({ rows }) {
   const [search, setSearch] = useState("")
@@ -68,10 +68,10 @@ export function MyTable({ rows }) {
 
   return <Table data={filtered} />
 }
-```
+\`\`\`
 
 ### After
-```typescript
+\`\`\`typescript
 // ✅ Optimized with memoization and debouncing
 export const MyTable = memo(function MyTable({ rows }) {
   const [search, setSearch] = useState("")
@@ -85,7 +85,7 @@ export const MyTable = memo(function MyTable({ rows }) {
 
   return <Table data={filtered} />
 })
-```
+\`\`\`
 
 ## 🔧 How to Use
 
@@ -93,7 +93,7 @@ export const MyTable = memo(function MyTable({ rows }) {
 All improvements are backward compatible. The app works exactly the same from a user perspective, just faster and more efficient.
 
 ### Development
-```bash
+\`\`\`bash
 # Install dependencies (if not already done)
 npm install
 
@@ -102,7 +102,7 @@ npm run dev
 
 # Build for production
 npm run build
-```
+\`\`\`
 
 ### Error Handling
 The app now has comprehensive error handling:
@@ -125,25 +125,25 @@ For even better performance, consider implementing:
 
 ### 1. Virtual Scrolling (High Priority)
 For tables with 1000+ rows, implement virtual scrolling:
-```bash
+\`\`\`bash
 npm install @tanstack/react-virtual
-```
+\`\`\`
 
 ### 2. Web Workers (Medium Priority)
 Move Excel parsing to background thread:
-```typescript
+\`\`\`typescript
 // excel-parser.worker.ts
 self.onmessage = async (e) => {
   const result = await parseExcelFile(e.data)
   self.postMessage(result)
 }
-```
+\`\`\`
 
 ### 3. IndexedDB Caching (Low Priority)
 Cache recent comparisons for instant reload:
-```bash
+\`\`\`bash
 npm install dexie
-```
+\`\`\`
 
 ## 🐛 Debugging
 
@@ -153,7 +153,7 @@ npm install dexie
 3. Record interactions to see render times
 
 ### Performance Monitoring
-```typescript
+\`\`\`typescript
 // Add to page.tsx
 import { Analytics } from '@vercel/analytics/react'
 
@@ -165,7 +165,7 @@ export default function RootLayout({ children }) {
     </>
   )
 }
-```
+\`\`\`
 
 ## 🎓 What You Learned
 

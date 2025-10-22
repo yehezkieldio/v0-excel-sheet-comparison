@@ -1,6 +1,6 @@
 "use client"
 
-import { memo, useCallback, useMemo } from "react"
+import { memo, useCallback } from "react"
 import { Search, ArrowUpDown, Filter, ChevronLeft, ChevronRight, XCircle } from "lucide-react"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
@@ -41,15 +41,29 @@ export const WeightComparisonTable = memo(function WeightComparisonTable({ rows 
   const debouncedSearchTerm = useDebounce(searchTerm, DEBOUNCE_DELAY)
 
   const getWeightStatus = useCallback((row: ComparisonRow) => {
+    if (row.hasDuplicates) {
+      return <Badge className="bg-error/10 text-error hover:bg-error/15 border-error/20 font-medium">⚠ Duplikat</Badge>
+    }
+
     const hasAll = row.jasterWeight !== null && row.cisWeight !== null && row.unifikasiWeight !== null
 
     if (hasAll && row.weightMatch) {
-      return <Badge className="bg-success/10 text-success hover:bg-success/15 border-success/20 font-medium">✓ Cocok</Badge>
+      return (
+        <Badge className="bg-success/10 text-success hover:bg-success/15 border-success/20 font-medium">✓ Cocok</Badge>
+      )
     }
     if (hasAll && !row.weightMatch) {
-      return <Badge className="bg-warning/10 text-warning hover:bg-warning/15 border-warning/20 font-medium">⚠ Tidak Cocok</Badge>
+      return (
+        <Badge className="bg-warning/10 text-warning hover:bg-warning/15 border-warning/20 font-medium">
+          ⚠ Tidak Cocok
+        </Badge>
+      )
     }
-    return <Badge className="bg-muted text-muted-foreground hover:bg-muted/80 border-border/50 font-medium">— Tidak Lengkap</Badge>
+    return (
+      <Badge className="bg-muted text-muted-foreground hover:bg-muted/80 border-border/50 font-medium">
+        — Tidak Lengkap
+      </Badge>
+    )
   }, [])
 
   return (
@@ -81,6 +95,7 @@ export const WeightComparisonTable = memo(function WeightComparisonTable({ rows 
                     <SelectItem value="perfect">✓ Kecocokan Sempurna</SelectItem>
                     <SelectItem value="mismatches">⚠ Ketidakcocokan Berat</SelectItem>
                     <SelectItem value="missing">✕ Berat Hilang</SelectItem>
+                    <SelectItem value="duplicates">⚠ Duplikat (Berat Berbeda)</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
@@ -107,8 +122,11 @@ export const WeightComparisonTable = memo(function WeightComparisonTable({ rows 
       {/* Results Summary */}
       <div className="flex items-center justify-between px-1">
         <div className="text-sm text-muted-foreground">
-          Menampilkan <span className="font-semibold text-foreground">{startIndex + 1}-{Math.min(endIndex, filteredAndSortedRows.length)}</span> dari{" "}
-          <span className="font-semibold text-foreground">{filteredAndSortedRows.length}</span> data
+          Menampilkan{" "}
+          <span className="font-semibold text-foreground">
+            {startIndex + 1}-{Math.min(endIndex, filteredAndSortedRows.length)}
+          </span>{" "}
+          dari <span className="font-semibold text-foreground">{filteredAndSortedRows.length}</span> data
         </div>
         <div className="text-xs text-muted-foreground">
           Halaman {currentPage} dari {totalPages}
@@ -122,31 +140,19 @@ export const WeightComparisonTable = memo(function WeightComparisonTable({ rows 
             <TableHeader className="bg-slate-50/80">
               <TableRow className="border-border/60 hover:bg-slate-50/80">
                 <TableHead className="font-semibold text-foreground">
-                  <Button
-                    variant="ghost"
-                    onClick={() => handleSort("awb")}
-                    className="h-8 px-2 hover:bg-slate-100"
-                  >
+                  <Button variant="ghost" onClick={() => handleSort("awb")} className="h-8 px-2 hover:bg-slate-100">
                     Nomor AWB
                     <ArrowUpDown className="ml-2 h-3.5 w-3.5" />
                   </Button>
                 </TableHead>
                 <TableHead className="font-semibold text-foreground">
-                  <Button
-                    variant="ghost"
-                    onClick={() => handleSort("jaster")}
-                    className="h-8 px-2 hover:bg-slate-100"
-                  >
+                  <Button variant="ghost" onClick={() => handleSort("jaster")} className="h-8 px-2 hover:bg-slate-100">
                     JASTER (CHW)
                     <ArrowUpDown className="ml-2 h-3.5 w-3.5" />
                   </Button>
                 </TableHead>
                 <TableHead className="font-semibold text-foreground">
-                  <Button
-                    variant="ghost"
-                    onClick={() => handleSort("cis")}
-                    className="h-8 px-2 hover:bg-slate-100"
-                  >
+                  <Button variant="ghost" onClick={() => handleSort("cis")} className="h-8 px-2 hover:bg-slate-100">
                     CIS (Chw. Weight)
                     <ArrowUpDown className="ml-2 h-3.5 w-3.5" />
                   </Button>
@@ -190,7 +196,9 @@ export const WeightComparisonTable = memo(function WeightComparisonTable({ rows 
                         {row.jasterWeight !== null ? (
                           <span
                             className={
-                              !row.weightMatch && row.jasterWeight !== null ? "text-warning font-semibold" : "text-foreground"
+                              !row.weightMatch && row.jasterWeight !== null
+                                ? "text-warning font-semibold"
+                                : "text-foreground"
                             }
                           >
                             {row.jasterWeight.toFixed(2)}
@@ -202,7 +210,11 @@ export const WeightComparisonTable = memo(function WeightComparisonTable({ rows 
                       <TableCell className="font-medium tabular-nums">
                         {row.cisWeight !== null ? (
                           <span
-                            className={!row.weightMatch && row.cisWeight !== null ? "text-warning font-semibold" : "text-foreground"}
+                            className={
+                              !row.weightMatch && row.cisWeight !== null
+                                ? "text-warning font-semibold"
+                                : "text-foreground"
+                            }
                           >
                             {row.cisWeight.toFixed(2)}
                           </span>
@@ -214,7 +226,9 @@ export const WeightComparisonTable = memo(function WeightComparisonTable({ rows 
                         {row.unifikasiWeight !== null ? (
                           <span
                             className={
-                              !row.weightMatch && row.unifikasiWeight !== null ? "text-warning font-semibold" : "text-foreground"
+                              !row.weightMatch && row.unifikasiWeight !== null
+                                ? "text-warning font-semibold"
+                                : "text-foreground"
                             }
                           >
                             {row.unifikasiWeight.toFixed(2)}
@@ -246,7 +260,8 @@ export const WeightComparisonTable = memo(function WeightComparisonTable({ rows 
           <div className="p-4">
             <div className="flex items-center justify-between">
               <div className="text-sm text-muted-foreground">
-                Halaman <span className="font-semibold text-foreground">{currentPage}</span> dari <span className="font-semibold text-foreground">{totalPages}</span>
+                Halaman <span className="font-semibold text-foreground">{currentPage}</span> dari{" "}
+                <span className="font-semibold text-foreground">{totalPages}</span>
               </div>
               <div className="flex items-center gap-2">
                 <Button

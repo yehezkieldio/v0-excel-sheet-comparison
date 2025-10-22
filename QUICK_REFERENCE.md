@@ -3,27 +3,27 @@
 ## 🎯 Component Optimizations
 
 ### Memoized Components
-```typescript
+\`\`\`typescript
 ✅ ComparisonDashboard
 ✅ WeightComparisonTable
 ✅ AwbComparisonTable
 ✅ ExcelUploader
 ✅ StatisticsView
-```
+\`\`\`
 
 ### Key Hooks Used
-```typescript
+\`\`\`typescript
 memo()          // Prevent unnecessary re-renders
 useCallback()   // Memoize functions
 useMemo()       // Memoize computed values
 useDebounce()   // Custom: Debounce input
 useTableFilters() // Custom: Table state management
-```
+\`\`\`
 
 ## 📂 File Structure Changes
 
 ### New Files
-```
+\`\`\`
 lib/constants.ts                    # Configuration constants
 lib/hooks/useDebounce.ts           # Debounce hook
 lib/hooks/useTableFilters.ts       # Table management
@@ -31,10 +31,10 @@ components/error-boundary.tsx       # Error handling
 REFACTORING_SUMMARY.md             # Full documentation
 PERFORMANCE_GUIDE.md               # Best practices
 UPGRADE_COMPLETE.md                # This migration guide
-```
+\`\`\`
 
 ### Modified Files
-```
+\`\`\`
 lib/excel-parser.ts                # Optimized parsing
 lib/comparison-engine.ts           # Algorithm improvements
 lib/export-utils.ts                # Cleaned up exports
@@ -42,7 +42,7 @@ components/comparison-dashboard.tsx # Memoized + lazy load
 components/excel-uploader.tsx      # Memoized + validation
 components/weight-comparison-table.tsx # Debounced search
 app/page.tsx                       # Code splitting + error boundary
-```
+\`\`\`
 
 ## ⚡ Performance Checklist
 
@@ -65,19 +65,19 @@ app/page.tsx                       # Code splitting + error boundary
 ## 🔍 Quick Debugging
 
 ### Check Component Re-renders
-```typescript
+\`\`\`typescript
 // Add to component
 useEffect(() => {
   console.log('Component rendered')
 })
-```
+\`\`\`
 
 ### Measure Performance
-```typescript
+\`\`\`typescript
 const start = performance.now()
 // ... operation ...
 console.log(`Took ${performance.now() - start}ms`)
-```
+\`\`\`
 
 ### Profile in Browser
 1. Open DevTools (F12)
@@ -102,7 +102,7 @@ console.log(`Took ${performance.now() - start}ms`)
 
 ## 🛠️ Common Commands
 
-```bash
+\`\`\`bash
 # Development
 npm run dev
 
@@ -117,22 +117,22 @@ npm run lint
 
 # Type check
 npx tsc --noEmit
-```
+\`\`\`
 
 ## 🐛 Troubleshooting
 
 ### Build Errors
-```bash
+\`\`\`bash
 # Clear cache
 rm -rf .next node_modules
 npm install
-```
+\`\`\`
 
 ### Type Errors
-```bash
+\`\`\`bash
 # Check types
 npx tsc --noEmit
-```
+\`\`\`
 
 ### Performance Issues
 1. Open React DevTools Profiler

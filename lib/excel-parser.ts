@@ -38,14 +38,17 @@ function parseWeight(value: unknown): number {
 
 /**
  * Parses a sheet into SheetData array
+ * Now returns all entries including duplicates for duplicate detection
  */
 function parseSheet(
   data: Array<Record<string, unknown>>,
   awbColumns: readonly string[],
   weightColumns: readonly string[],
-  sheetName: string
+  sheetName: string,
 ): SheetData[] {
-  return data
+  console.log(`[v0] Parsing ${sheetName} - Total rows: ${data.length}`)
+
+  const parsed = data
     .filter((row) => {
       const awbCol = findColumn(row, awbColumns)
       return awbCol && row[awbCol]
@@ -63,6 +66,26 @@ function parseSheet(
         weight: weightCol ? parseWeight(row[weightCol]) : 0,
       }
     })
+
+  const awbCounts = new Map<string, number[]>()
+  parsed.forEach((item) => {
+    if (!awbCounts.has(item.awb)) {
+      awbCounts.set(item.awb, [])
+    }
+    awbCounts.get(item.awb)!.push(item.weight)
+  })
+
+  const duplicatesWithDifferentWeights = Array.from(awbCounts.entries()).filter(([_, weights]) => {
+    if (weights.length <= 1) return false
+    const uniqueWeights = new Set(weights)
+    return uniqueWeights.size > 1
+  })
+
+  console.log(
+    `[v0] ${sheetName} - Parsed: ${parsed.length}, Unique AWBs: ${awbCounts.size}, Duplicates with different weights: ${duplicatesWithDifferentWeights.length}`,
+  )
+
+  return parsed
 }
 
 /**
@@ -99,7 +122,7 @@ export async function parseExcelFile(file: File): Promise<ParsedExcelData> {
           jasterData,
           COLUMN_MAPPINGS.JASTER.AWB,
           COLUMN_MAPPINGS.JASTER.WEIGHT,
-          SHEET_NAMES.JASTER
+          SHEET_NAMES.JASTER,
         )
 
         // Parse CIS sheet
@@ -114,7 +137,7 @@ export async function parseExcelFile(file: File): Promise<ParsedExcelData> {
           unifikasiData,
           COLUMN_MAPPINGS.UNIFIKASI.AWB,
           COLUMN_MAPPINGS.UNIFIKASI.WEIGHT,
-          SHEET_NAMES.UNIFIKASI
+          SHEET_NAMES.UNIFIKASI,
         )
 
         // Validate we got some data

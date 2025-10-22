@@ -21,6 +21,12 @@ export interface ComparisonRow {
   }
   weightMatch: boolean
   discrepancies: string[]
+  hasDuplicates: boolean
+  duplicateInfo?: {
+    jasterDuplicate?: boolean
+    cisDuplicate?: boolean
+    unifikasiDuplicate?: boolean
+  }
 }
 
 export interface ComparisonStats {

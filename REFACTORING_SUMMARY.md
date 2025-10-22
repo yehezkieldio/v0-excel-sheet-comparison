@@ -78,11 +78,11 @@ Added `ErrorBoundary` component for better error handling:
 - Type-safe filter and sort functions
 
 ### 4. Modular Hook Architecture
-```
+\`\`\`
 lib/hooks/
 ├── useDebounce.ts       - Generic debounce hook
 └── useTableFilters.ts   - Table state management
-```
+\`\`\`
 
 ## 🧹 Code Quality
 
@@ -125,66 +125,66 @@ lib/hooks/
 
 ### 1. Virtual Scrolling
 For tables with 1000+ rows:
-```typescript
+\`\`\`typescript
 import { useVirtualizer } from '@tanstack/react-virtual'
-```
+\`\`\`
 - Only render visible rows
 - Massive performance gain for large datasets
 - Reduces DOM nodes by 95%
 
 ### 2. Web Workers
 For heavy Excel parsing:
-```typescript
+\`\`\`typescript
 // excel-parser.worker.ts
 self.onmessage = async (e) => {
   const result = await parseExcelFile(e.data)
   self.postMessage(result)
 }
-```
+\`\`\`
 - Offload parsing to background thread
 - Keep UI responsive during processing
 - Better user experience
 
 ### 3. IndexedDB Caching
 For recent comparisons:
-```typescript
+\`\`\`typescript
 // Cache parsed data
 await db.comparisons.put({
   id: fileHash,
   result,
   timestamp
 })
-```
+\`\`\`
 - Store recent comparisons
 - Instant reload of previous analyses
 - Offline capability
 
 ### 4. Progressive Rendering
 For very large datasets:
-```typescript
+\`\`\`typescript
 // Render in chunks
 const chunkSize = 100
 for (let i = 0; i < rows.length; i += chunkSize) {
   await renderChunk(rows.slice(i, i + chunkSize))
 }
-```
+\`\`\`
 - Show results incrementally
 - Better perceived performance
 - Prevents UI freezing
 
 ### 5. Request Cancellation
 For file uploads:
-```typescript
+\`\`\`typescript
 const abortController = new AbortController()
 // Cancel on unmount or new upload
-```
+\`\`\`
 - Cancel in-progress operations
 - Prevent memory leaks
 - Better resource management
 
 ## 📁 New File Structure
 
-```
+\`\`\`
 lib/
 ├── constants.ts              ✨ NEW - Centralized constants
 ├── hooks/
@@ -204,7 +204,7 @@ components/
 
 app/
 └── page.tsx                  ♻️ REFACTORED - Lazy loading
-```
+\`\`\`
 
 ## 🔧 Breaking Changes
 None! All changes are backward compatible.

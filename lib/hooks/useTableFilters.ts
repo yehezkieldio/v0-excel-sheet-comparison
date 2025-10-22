@@ -1,7 +1,9 @@
+"use client"
+
 import { useMemo, useState, useCallback } from "react"
 import type { ComparisonRow } from "../types"
 
-export type FilterType = "all" | "mismatches" | "missing" | "perfect"
+export type FilterType = "all" | "mismatches" | "missing" | "perfect" | "duplicates"
 export type SortField = "awb" | "jaster" | "cis" | "unifikasi"
 export type SortDirection = "asc" | "desc"
 
@@ -42,10 +44,7 @@ interface UseTableFiltersReturn {
 /**
  * Custom hook to manage table filtering, sorting, and pagination
  */
-export function useTableFilters({
-  rows,
-  initialPageSize = 50,
-}: UseTableFiltersOptions): UseTableFiltersReturn {
+export function useTableFilters({ rows, initialPageSize = 50 }: UseTableFiltersOptions): UseTableFiltersReturn {
   const [searchTerm, setSearchTerm] = useState("")
   const [filter, setFilter] = useState<FilterType>("all")
   const [sortField, setSortField] = useState<SortField>("awb")
@@ -69,17 +68,17 @@ export function useTableFilters({
         break
       case "missing":
         filtered = filtered.filter(
-          (row) => row.jasterWeight === null || row.cisWeight === null || row.unifikasiWeight === null
+          (row) => row.jasterWeight === null || row.cisWeight === null || row.unifikasiWeight === null,
         )
         break
       case "perfect":
         filtered = filtered.filter(
           (row) =>
-            row.jasterWeight !== null &&
-            row.cisWeight !== null &&
-            row.unifikasiWeight !== null &&
-            row.weightMatch
+            row.jasterWeight !== null && row.cisWeight !== null && row.unifikasiWeight !== null && row.weightMatch,
         )
+        break
+      case "duplicates":
+        filtered = filtered.filter((row) => row.hasDuplicates)
         break
     }
 
@@ -125,7 +124,7 @@ export function useTableFilters({
   const endIndex = Math.min(startIndex + pageSize, filteredAndSortedRows.length)
   const paginatedRows = useMemo(
     () => filteredAndSortedRows.slice(startIndex, endIndex),
-    [filteredAndSortedRows, startIndex, endIndex]
+    [filteredAndSortedRows, startIndex, endIndex],
   )
 
   const handleSort = useCallback((field: SortField) => {
